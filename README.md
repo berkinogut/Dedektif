@@ -36,4 +36,3 @@ yayınlamasını sağlar. Vercel projesini GitHub deposuna bağlamak yeterlidir.
 
 Oyun kayıtları kullanıcının kendi tarayıcısında tutulur. Farklı cihazlar veya
 tarayıcılar arasında senkronize edilmez.
-

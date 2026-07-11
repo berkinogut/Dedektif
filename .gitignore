@@ -1,0 +1,42 @@
+# Dependencies and build output
+node_modules/
+dist/
+build/
+coverage/
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.*
+credentials.*
+
+# Hosting and editor metadata
+.vercel/
+.vscode/
+.idea/
+
+# Local Codex workspace metadata
+.agents/
+.codex/
+work/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Unused source images and superseded portrait atlases
+outputs/assets/*.png
+outputs/assets/suspects-atlas-*.webp
