@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#091113" />
     <title>Cinayet Büro Amirliği | İnteraktif Soruşturma</title>
-    <link rel="stylesheet" href="styles.css?v=13" />
+    <link rel="stylesheet" href="styles.css?v=14" />
   </head>
   <body>
     <main class="app-shell">
@@ -159,6 +159,17 @@
         </div>
       </section>
 
+      <section id="reportModal" class="report-modal is-hidden" role="dialog" aria-modal="true" aria-labelledby="reportTitle">
+        <div class="report-dialog">
+          <button id="closeReport" class="report-close" type="button" aria-label="Raporu kapat">×</button>
+          <div class="report-visual"><img id="reportImage" src="" alt="" /></div>
+          <div class="report-content">
+            <p id="reportEyebrow" class="kicker">Adli Rapor</p>
+            <h2 id="reportTitle">Dosya raporu</h2>
+            <div id="reportBody" class="report-body"></div>
+          </div>
+        </div>
+      </section>
       <section id="resultScreen" class="result-screen is-hidden" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
         <div class="result-rays" aria-hidden="true"></div>
         <div class="result-card">
@@ -175,6 +186,6 @@
         </div>
       </section>
     </main>
-    <script src="script.js?v=13"></script>
+    <script src="script.js?v=14"></script>
   </body>
 </html>

@@ -403,6 +403,8 @@ let isClosed = false;
 let isAnswering = false;
 let pendingQuestionIndex = null;
 let answerTimer = null;
+let activeTabName = "file";
+let lastReportTrigger = null;
 
 const introScreen = document.querySelector("#introScreen");
 const gameScreen = document.querySelector("#gameScreen");
@@ -420,6 +422,10 @@ const accuseBtn = document.querySelector("#accuseBtn");
 const activePortrait = document.querySelector("#activePortrait");
 const commissionerName = document.querySelector("#commissionerName");
 const resultScreen = document.querySelector("#resultScreen");
+const reportModal = document.querySelector("#reportModal");
+const reportImage = document.querySelector("#reportImage");
+const reportBody = document.querySelector("#reportBody");
+const caseFile = document.querySelector("#caseFile");
 const startShift = document.querySelector("#startShift");
 const profileHint = document.querySelector("#profileHint");
 const archiveSummary = document.querySelector("#archiveSummary");
@@ -618,21 +624,85 @@ function resetInterview() {
   renderQuestions();
 }
 
-function renderCaseFile() {
-  const timeline = currentCase.timeline.map((item) => `<li>${item}</li>`).join("");
-  const gallery = currentCase.forensic.map((item) => `
-    <article class="forensic-card">
-      <img src="${item.image}" alt="${item.type}: ${item.title}" />
-      <div><span>${item.type}</span><strong>${item.title}</strong><small>${item.note}</small></div>
-    </article>`).join("");
-  document.querySelector("#caseFile").innerHTML = `
-    <div class="forensic-gallery">${gallery}</div>
-    <div class="file-grid">
-      ${currentCase.file.map(([title, text]) => `<div class="file-card"><strong>${title}</strong><span>${text}</span></div>`).join("")}
-      <div class="file-card timeline-card"><strong>Zaman çizelgesi</strong><span><ol>${timeline}</ol></span></div>
-    </div>`;
+function reportDataFor(index) {
+  const item = currentCase.forensic[index];
+  const discovered = evidence.size
+    ? [...evidence.keys()].map((text) => `<li>${escapeHtml(text)}</li>`).join("")
+    : "<li>Sorgudan doğrulanmış ek delil henüz yok.</li>";
+  const common = { image: item.image, alt: `${item.type}: ${item.title}` };
+  if (index === 0) return {
+    ...common,
+    eyebrow: "Maktul ve Olay Özeti",
+    title: currentCase.victim,
+    sections: [
+      ["Olayın nasıl gerçekleştiği", currentCase.summary],
+      ["Yer ve zaman", `${currentCase.location} · ${currentCase.deathWindow}`],
+      ["Adli tıp değerlendirmesi", currentCase.method.detail],
+      ["Soruşturma ekseni", `Maktulün araştırdığı ${currentCase.motive}, dosyanın ana risk hattını oluşturuyor.`]
+    ]
+  };
+  if (index === 1) return {
+    ...common,
+    eyebrow: "Olay Yeri Raporu",
+    title: currentCase.location,
+    sections: [
+      [currentCase.file[0][0], currentCase.file[0][1]],
+      ["Olay yerindeki ipuçları", `${currentCase.method.object} üzerinde ${currentCase.method.trace} tespit edildi.`],
+      ["Zaman çizelgesi", `<ol>${currentCase.timeline.map((text) => `<li>${escapeHtml(text)}</li>`).join("")}</ol>`]
+    ]
+  };
+  if (index === 2) return {
+    ...common,
+    eyebrow: "DNA İnceleme Raporu",
+    title: "Biyolojik Analiz",
+    sections: [
+      ["Laboratuvar notu", item.note],
+      ["Karşılaştırma kapsamı", "Olay yerinden alınan biyolojik örnekler, şüphelilerin referans profilleriyle karşılaştırılıyor."],
+      ["Sorgudan elde edilen deliller", `<ul>${discovered}</ul>`]
+    ]
+  };
+  return {
+    ...common,
+    eyebrow: "Balistik / İz Raporu",
+    title: currentCase.method.object,
+    sections: [
+      ["İncelenen nesne", currentCase.method.object],
+      ["Tespit edilen adli iz", currentCase.method.trace],
+      ["Uzman değerlendirmesi", currentCase.method.detail],
+      ["Sorgudan elde edilen deliller", `<ul>${discovered}</ul>`]
+    ]
+  };
 }
 
+function openReport(index, trigger) {
+  const report = reportDataFor(index);
+  lastReportTrigger = trigger;
+  reportImage.src = report.image;
+  reportImage.alt = report.alt;
+  document.querySelector("#reportEyebrow").textContent = report.eyebrow;
+  document.querySelector("#reportTitle").textContent = report.title;
+  reportBody.innerHTML = report.sections.map(([title, content]) => `<section><h3>${escapeHtml(title)}</h3><div>${content}</div></section>`).join("");
+  reportModal.classList.remove("is-hidden");
+  requestAnimationFrame(() => reportModal.classList.add("is-visible"));
+  document.querySelector("#closeReport").focus();
+}
+
+function closeReport() {
+  reportModal.classList.remove("is-visible");
+  window.setTimeout(() => reportModal.classList.add("is-hidden"), 180);
+  lastReportTrigger?.focus();
+}
+
+function renderCaseFile() {
+  const gallery = currentCase.forensic.map((item, index) => `
+    <button class="forensic-card" data-report-index="${index}" type="button" aria-label="${item.type} raporunu aç">
+      <img src="${item.image}" alt="${item.type}: ${item.title}" />
+      <div><span>${item.type}</span><strong>${item.title}</strong><small>Raporu aç</small></div>
+    </button>`).join("");
+  caseFile.innerHTML = `
+    <div class="forensic-gallery">${gallery}</div>
+    <p class="file-hint">Dosya ayrıntıları için bir görsele dokun. Sorgu ekranı yalnızca aktif işlemleri gösterir.</p>`;
+}
 function renderSuspects() {
   const selectedAccusation = accuseSelect.value;
   suspectList.innerHTML = currentCase.suspects.map((suspect, index) => {
@@ -753,7 +823,7 @@ function askQuestion(index) {
     renderLog();
     renderEvidence();
     saveCurrentCase();
-    switchTab(item.key ? "evidence" : "log");
+    // Kullanıcının seçtiği sekme değişmeden kalır.
   }, delay);
 }
 
@@ -844,6 +914,7 @@ function hideResultScreen() {
 }
 
 function switchTab(tabName) {
+  activeTabName = tabName;
   document.querySelectorAll(".tab").forEach((tab) => {
     const active = tab.dataset.tab === tabName;
     tab.classList.toggle("is-active", active);
@@ -893,7 +964,17 @@ questionBank.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-index]");
   if (button) askQuestion(Number(button.dataset.index));
 });
-document.querySelector("#clearLog").addEventListener("click", () => {
+caseFile.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-report-index]");
+  if (button) openReport(Number(button.dataset.reportIndex), button);
+});
+document.querySelector("#closeReport").addEventListener("click", closeReport);
+reportModal.addEventListener("click", (event) => {
+  if (event.target === reportModal) closeReport();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && reportModal.classList.contains("is-visible")) closeReport();
+});document.querySelector("#clearLog").addEventListener("click", () => {
   logEntries = [];
   renderLog();
   saveCurrentCase();
