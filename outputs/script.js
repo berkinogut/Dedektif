@@ -337,10 +337,12 @@ function buildCases() {
 
 const cases = buildCases();
 const progressByCase = loadProgress();
+const profile = loadProfile();
 let currentCase = null;
 let activeSuspect = null;
 let evidence = new Map();
 let asked = new Set();
+let suspectProgress = new Map();
 let questionTotal = 0;
 let logEntries = [];
 let isClosed = false;
@@ -362,6 +364,47 @@ const bodyLanguage = document.querySelector("#bodyLanguage");
 const reactionState = document.querySelector("#reactionState");
 const accuseBtn = document.querySelector("#accuseBtn");
 const activePortrait = document.querySelector("#activePortrait");
+const commissionerName = document.querySelector("#commissionerName");
+const resultScreen = document.querySelector("#resultScreen");
+
+commissionerName.value = profile.name;
+
+function cleanName(value = "") {
+  return String(value).trim().replace(/\s+/g, " ").slice(0, 28);
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[character]);
+}
+
+function loadProfile() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("gece-vardiyasi-profile") || "{}");
+    return { name: cleanName(saved.name) };
+  } catch {
+    return { name: "" };
+  }
+}
+
+function commissionerLabel() {
+  return profile.name ? `Komiser ${profile.name}` : "Komiser";
+}
+
+function saveProfile() {
+  profile.name = cleanName(commissionerName.value);
+  commissionerName.value = profile.name;
+  try {
+    localStorage.setItem("gece-vardiyasi-profile", JSON.stringify(profile));
+  } catch {
+    // Profil depolanamasa da mevcut oturum kişiselleştirilmiş kalır.
+  }
+}
 
 function loadProgress() {
   try {
@@ -386,6 +429,7 @@ function saveCurrentCase() {
     evidence: [...evidence.entries()],
     questionTotal,
     logEntries,
+    suspectProgress: [...suspectProgress.entries()],
     isClosed,
     activeSuspectId: activeSuspect?.id || null
   });
@@ -424,6 +468,7 @@ function startCase(caseId) {
   const saved = progressByCase.get(caseId) || {};
   evidence = new Map(saved.evidence || []);
   asked = new Set(saved.asked || []);
+  suspectProgress = new Map(saved.suspectProgress || []);
   questionTotal = saved.questionTotal || 0;
   logEntries = saved.logEntries || [];
   isClosed = Boolean(saved.isClosed);
@@ -471,11 +516,15 @@ function renderCaseFile() {
 
 function renderSuspects() {
   const selectedAccusation = accuseSelect.value;
-  suspectList.innerHTML = currentCase.suspects.map((suspect, index) => `
+  suspectList.innerHTML = currentCase.suspects.map((suspect, index) => {
+    const completed = suspect.questions.filter((_, questionIndex) => asked.has(`${suspect.id}-${questionIndex}`)).length;
+    const percent = Math.round((completed / suspect.questions.length) * 100);
+    return `
     <button class="suspect suspect-tone-${index} ${activeSuspect?.id === suspect.id ? "is-active" : ""}" data-id="${suspect.id}" type="button" ${isAnswering ? "disabled" : ""}>
       <span class="suspect-thumb" style="${portraitStyle(suspect.portrait)}" aria-hidden="true"></span>
-      <span><strong>${suspect.name}</strong><span>${suspect.role}</span></span>
-    </button>`).join("");
+      <span class="suspect-copy"><strong>${suspect.name}</strong><span>${suspect.role}</span><span class="suspect-progress"><i style="--progress:${percent}%"></i><small>${completed}/${suspect.questions.length} soru</small></span></span>
+    </button>`;
+  }).join("");
 
   accuseSelect.innerHTML = '<option value="">Şüpheli seç...</option>' +
     currentCase.suspects.map((suspect) => `<option value="${suspect.id}">${suspect.name}</option>`).join("");
@@ -494,7 +543,12 @@ function selectSuspect(id) {
   document.querySelector("#activeBio").textContent = activeSuspect.bio;
   activePortrait.className = "active-portrait";
   activePortrait.setAttribute("style", portraitStyle(activeSuspect.portrait));
-  updateObservation(0, `${activeSuspect.name} ifadeye hazır. İlk gözlemde beden dili ölçülü.`, "İlk gözlem");
+  const remembered = suspectProgress.get(activeSuspect.id);
+  if (remembered) {
+    updateObservation(remembered.state, remembered.text, remembered.reaction);
+  } else {
+    updateObservation(0, `${activeSuspect.name} ifadeye hazır. İlk gözlemde beden dili ölçülü.`, "İlk gözlem");
+  }
   renderSuspects();
   renderQuestions();
   saveCurrentCase();
@@ -504,6 +558,14 @@ function updateObservation(state, text, reaction) {
   observationPanel.className = `observation-panel state-${state}`;
   bodyLanguage.textContent = text;
   reactionState.textContent = reaction;
+}
+
+function personalizedAnswer(item) {
+  if (!profile.name) return item.a;
+  const askedBefore = logEntries.filter((entry) => entry.suspectId === activeSuspect?.id).length;
+  const address = askedBefore === 0 ? `${commissionerLabel()}, ` : askedBefore === 2 ? `Bakın ${commissionerLabel()}, ` : "";
+  if (!address) return item.a;
+  return `${address}${item.a.charAt(0).toLocaleLowerCase("tr-TR")}${item.a.slice(1)}`;
 }
 
 function renderQuestions() {
@@ -554,10 +616,16 @@ function askQuestion(index) {
     pendingQuestionIndex = null;
     asked.add(questionId);
     questionTotal += 1;
-    logEntries.unshift({ question: item.q, answer: item.a, name: suspectName, suspectId });
+    const answer = personalizedAnswer(item);
+    logEntries.unshift({ question: item.q, answer, name: suspectName, suspectId });
     if (item.clue && !evidence.has(item.clue)) evidence.set(item.clue, Boolean(item.key));
     document.querySelector("#questionCount").textContent = questionTotal;
     updateObservation(Math.min(index + 1, 4), item.pose, item.reaction);
+    suspectProgress.set(suspectId, {
+      state: Math.min(index + 1, 4),
+      text: item.pose,
+      reaction: item.reaction
+    });
     accuseBtn.disabled = isClosed;
     accuseSelect.disabled = isClosed;
     renderQuestions();
@@ -588,7 +656,7 @@ function renderLog() {
     return `
       <div class="log-turn">
         <div class="speech speech-commissioner">
-          <span>Komiser</span>
+          <span>${escapeHtml(commissionerLabel())}</span>
           <p>${entry.question}</p>
         </div>
         <div class="speech speech-suspect suspect-tone-${tone}">
@@ -629,6 +697,7 @@ function accuse() {
     accuseSelect.disabled = true;
     renderQuestions();
     saveCurrentCase();
+    window.setTimeout(showResultScreen, 420);
   } else if (suspectId === currentCase.killerId) {
     verdict.classList.add("bad");
     verdict.textContent = "Tahminin doğru olabilir ama dosya zayıf. En az üç kritik delil topla.";
@@ -636,6 +705,30 @@ function accuse() {
     verdict.classList.add("bad");
     verdict.textContent = "Yanlış suçlama. Kritik izler bu şüpheliyle yeterince örtüşmüyor.";
   }
+}
+
+function showResultScreen() {
+  if (!currentCase || !isClosed) return;
+  const killer = currentCase.suspects.find((suspect) => suspect.id === currentCase.killerId);
+  const keyCount = [...evidence.values()].filter(Boolean).length;
+  document.querySelector("#resultTitle").textContent = `${currentCase.title} kapandı`;
+  document.querySelector("#resultLead").textContent = `${commissionerLabel()}, doğru bağlantıyı kurdun. ${killer.name} cinayetten sorumlu bulundu.`;
+  document.querySelector("#resultStats").innerHTML = `
+    <span><strong>${questionTotal}</strong>soru</span>
+    <span><strong>${evidence.size}</strong>delil</span>
+    <span><strong>${keyCount}</strong>kritik eşleşme</span>`;
+  document.querySelector("#resultSummary").innerHTML = `
+    <p><span>Fail</span><strong>${killer.name}</strong></p>
+    <p><span>Yöntem</span><strong>${currentCase.method.short}</strong></p>
+    <p><span>Güdü</span><strong>${currentCase.motive}</strong></p>`;
+  resultScreen.classList.remove("is-hidden");
+  requestAnimationFrame(() => resultScreen.classList.add("is-visible"));
+  document.querySelector("#resultToCases").focus();
+}
+
+function hideResultScreen() {
+  resultScreen.classList.remove("is-visible");
+  window.setTimeout(() => resultScreen.classList.add("is-hidden"), 260);
 }
 
 function switchTab(tabName) {
@@ -653,6 +746,8 @@ caseList.addEventListener("click", (event) => {
   if (button) startCase(button.dataset.caseId);
 });
 caseSearch.addEventListener("input", (event) => renderCaseList(event.target.value));
+commissionerName.addEventListener("change", saveProfile);
+commissionerName.addEventListener("blur", saveProfile);
 document.querySelector("#backToCases").addEventListener("click", () => {
   cancelPendingAnswer();
   saveCurrentCase();
@@ -678,18 +773,31 @@ document.querySelector("#resetGame").addEventListener("click", () => {
   if (!approved) return;
   cancelPendingAnswer();
   localStorage.removeItem("gece-vardiyasi-progress");
+  localStorage.removeItem("gece-vardiyasi-profile");
   progressByCase.clear();
   currentCase = null;
   activeSuspect = null;
   evidence = new Map();
   asked = new Set();
+  suspectProgress = new Map();
   questionTotal = 0;
   logEntries = [];
   isClosed = false;
   caseSearch.value = "";
+  profile.name = "";
+  commissionerName.value = "";
   renderCaseList("");
 });
 accuseBtn.addEventListener("click", accuse);
+document.querySelector("#reviewCase").addEventListener("click", hideResultScreen);
+document.querySelector("#resultToCases").addEventListener("click", () => {
+  hideResultScreen();
+  saveCurrentCase();
+  gameScreen.classList.add("is-hidden");
+  introScreen.classList.remove("is-hidden");
+  renderCaseList();
+});
 document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => switchTab(tab.dataset.tab)));
 
 renderCaseList();
+
