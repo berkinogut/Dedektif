@@ -1,30 +1,54 @@
-const victims = [
-  "Levent Arman", "Derya Korhan", "Cem Tunalı", "Ayşe Yıldırım", "Baran Eren",
-  "Nermin Savaş", "Oğuz Karan", "Melis Uslu", "Tarık Ersoy", "Gizem Aksoy",
-  "Yalın Demir", "Suna Ergin", "Kemal Ilgaz", "İpek Tan", "Rauf Deniz",
-  "Mina Soyer", "Yekta Bulut", "Aslı Meriç", "Tolga Kıraç", "Nazan Ulus",
-  "Eren Saygı", "Defne Aral", "Bora Kalkan", "Lale Onur", "Serkan Tezel",
-  "Pelin Aksu", "Mahir Toker", "Cansu Bilgin", "Volkan Özer", "Sevda Ural",
-  "Arda Polat", "Nil Karaca", "Ferit Uğur", "Zeynep Alkan", "Hakan Sezgin",
-  "Bade Yücel", "Emre Güneş", "Elif Sarp", "Orhan Batur", "Merve Tunç",
-  "Kaan Poyraz", "Sibel Aydın", "Umut Giray", "Buket Irmak", "Tuna Acar",
-  "Rana Ekin", "Alp Soylu", "Eylül Bozkurt", "Mert Yaman", "Selma Kaya"
+const victimFirstNames = [
+  "Levent", "Derya", "Cem", "Ayşe", "Baran", "Nermin", "Oğuz", "Melis", "Tarık", "Gizem",
+  "Yalın", "Suna", "Kemal", "İpek", "Rauf", "Mina", "Yekta", "Aslı", "Tolga", "Nazan",
+  "Eren", "Defne", "Bora", "Lale", "Serkan", "Pelin", "Mahir", "Cansu", "Volkan", "Sevda",
+  "Arda", "Nil", "Ferit", "Zeynep", "Hakan", "Bade", "Emre", "Elif", "Orhan", "Merve",
+  "Kaan", "Sibel", "Umut", "Buket", "Tuna", "Rana", "Alp", "Eylül", "Mert", "Selma"
 ];
+
+const victimSurnames = [
+  "Arman", "Korhan", "Tunalı", "Yıldırım", "Eren", "Savaş", "Karan", "Uslu", "Ersoy", "Aksoy",
+  "Demir", "Ergin", "Ilgaz", "Tan", "Deniz", "Soyer", "Bulut", "Meriç", "Kıraç", "Ulus",
+  "Saygı", "Aral", "Kalkan", "Onur", "Tezel", "Aksu", "Toker", "Bilgin", "Özer", "Ural",
+  "Polat", "Karaca", "Uğur", "Alkan", "Sezgin", "Yücel", "Güneş", "Sarp", "Batur", "Tunç",
+  "Poyraz", "Aydın", "Giray", "Irmak", "Acar", "Ekin", "Soylu", "Bozkurt", "Yaman", "Kaya"
+];
+
+const victims = Array.from({ length: 100 }, (_, index) => {
+  const first = victimFirstNames[index % victimFirstNames.length];
+  const surnameIndex = (index * 7 + Math.floor(index / victimFirstNames.length) * 13) % victimSurnames.length;
+  return `${first} ${victimSurnames[surnameIndex]}`;
+});
 
 const firstNames = [
-  "Ece", "Murat", "Deniz", "Selin", "Canan", "Mert", "Fırat", "Burcu", "Kerem", "Aylin",
-  "Tamer", "Seda", "Onur", "Beste", "Cihan", "Dilan", "Koray", "Pınar", "Rıza", "Yağmur",
-  "Gökhan", "Nazlı", "Emir", "Mina", "Bartu", "Leyla", "Sarp", "İdil", "Alper", "Simge",
-  "Kuzey", "Melek", "Ulaş", "Duru", "Ekin", "Nejat", "Zehra", "Yaman", "Ceren", "Ozan",
-  "Buse", "Sinan", "İrem", "Arif", "Nehir", "Doruk", "Güneş", "Sibel", "Tuna", "Esra"
+  "Ece", "Murat", "Deniz", "Selin", "Canan", "Fırat", "Burcu", "Kerem", "Aylin", "Tamer",
+  "Seda", "Onur", "Beste", "Cihan", "Dilan", "Koray", "Pınar", "Rıza", "Yağmur", "Gökhan",
+  "Nazlı", "Emir", "Bartu", "Leyla", "Sarp", "İdil", "Alper", "Simge", "Kuzey", "Melek",
+  "Ulaş", "Duru", "Ekin", "Nejat", "Zehra", "Yaman", "Ceren", "Ozan", "Buse", "Sinan",
+  "İrem", "Arif", "Nehir", "Doruk", "Güneş", "Esra", "Aren", "Lina", "Atlas", "Ada",
+  "Taner", "Damla", "Ömer", "Nisa", "Barış", "Ceyda", "Utku", "Eda", "Kıvanç", "Selen",
+  "Berke", "Derin", "Cenk", "Ahu", "Yiğit", "Lara", "Koral", "Beliz", "Demir", "İlayda",
+  "Oytun", "Alara", "Taylan", "Nehirhan", "Berk", "Eylül", "Çağrı", "Maya", "Engin", "Lalin"
 ];
 
-const surnames = ["Karaca", "Şener", "Aydın", "Vural"];
+const surnames = [
+  "Karaca", "Şener", "Aydın", "Vural", "Keskin", "Ertem", "Dinçer", "Sağlam", "Korkmaz", "Özkan",
+  "Başar", "Tekin", "Akın", "Gür", "Sönmez", "Avcı", "Toprak", "Eroğlu", "Kurt", "Erdem",
+  "Koç", "Taşçı", "Baysal", "Keleş", "Aybar", "Güven", "Çetin", "Köksal", "Duman", "Ekinci",
+  "Oral", "Önal", "Yalçın", "Doğan", "Bayrak", "İnce", "Güler", "Mutlu", "Özdemir", "Kılıç",
+  "Duru", "Aksoy", "Çağlar", "Uçar", "Gökçe", "Turan", "Sezer", "Arı", "Bozkır", "Ateş",
+  "Esen", "Özbay", "Koral", "Sayın", "Erkin", "Tansu", "Yüce", "Tanrıverdi", "Kavak", "Gürsoy",
+  "Akman", "Eray", "Yüksel", "Işık", "Özden", "Kara", "Kapan", "Aydemir", "Çakır", "Dikmen",
+  "Ilıcalı", "Özen", "Erkal", "Kunt", "Atalay", "Boran", "Çevik", "Kaynak", "Öztürk", "Gündüz"
+];
+
 const femaleFirstNames = new Set([
-  "Ece", "Deniz", "Selin", "Canan", "Burcu", "Aylin", "Seda", "Beste", "Dilan",
-  "Pınar", "Yağmur", "Nazlı", "Mina", "Leyla", "İdil", "Simge", "Melek", "Duru",
-  "Ekin", "Zehra", "Ceren", "Buse", "İrem", "Nehir", "Güneş", "Sibel", "Esra"
+  "Ece", "Deniz", "Selin", "Canan", "Burcu", "Aylin", "Seda", "Beste", "Dilan", "Pınar",
+  "Yağmur", "Nazlı", "Leyla", "İdil", "Simge", "Melek", "Duru", "Ekin", "Zehra", "Ceren",
+  "Buse", "İrem", "Nehir", "Güneş", "Esra", "Lina", "Ada", "Damla", "Nisa", "Ceyda",
+  "Eda", "Selen", "Derin", "Ahu", "Lara", "Beliz", "İlayda", "Alara", "Eylül", "Maya", "Lalin"
 ]);
+
 const roles = [
   "iş ortağı", "gece sorumlusu", "yakın arkadaşı", "eski eşi", "muhasebeci",
   "teknik görevli", "avukat", "asistan", "tedarikçi", "komşusu",
@@ -32,6 +56,12 @@ const roles = [
 ];
 const moods = ["Kontrollü", "Savunmada", "Tedirgin", "Soğukkanlı", "Yorgun", "Öfkeli"];
 
+const difficulties = {
+  easy: { label: "Kolay", range: [0, 25], requiredClues: 2, hint: "Yönlendirmeli sorgu" },
+  normal: { label: "Normal", range: [25, 50], requiredClues: 3, hint: "Dengeli soruşturma" },
+  hard: { label: "Zor", range: [50, 75], requiredClues: 4, hint: "Sınırlı adli destek" },
+  police: { label: "Gerçek Polis İşi", range: [75, 100], requiredClues: 5, hint: "Tavizsiz prosedür" }
+};
 const caseWorlds = [
   {
     place: "Beyoğlu'ndaki özel sanat galerisi",
@@ -172,7 +202,10 @@ function initials(name) {
 }
 
 function suspectName(slot) {
-  return `${firstNames[slot % firstNames.length]} ${surnames[Math.floor(slot / firstNames.length)]}`;
+  const first = firstNames[slot % firstNames.length];
+  const cycle = Math.floor(slot / firstNames.length);
+  const surnameIndex = (slot * 29 + cycle * 17) % surnames.length;
+  return `${first} ${surnames[surnameIndex]}`;
 }
 
 function portraitStyle(portrait) {
@@ -182,16 +215,22 @@ function portraitStyle(portrait) {
 const portraitsBySlot = (() => {
   let femaleIndex = 0;
   let maleIndex = 0;
-  return Array.from({ length: 200 }, (_, slot) => {
+  return Array.from({ length: 400 }, (_, slot) => {
     const firstName = firstNames[slot % firstNames.length];
     const isFemale = femaleFirstNames.has(firstName);
-    const portraitIndex = isFemale ? femaleIndex++ : maleIndex++;
+    const portraitIndex = isFemale ? femaleIndex++ % 121 : maleIndex++ % 144;
     return {
       gender: isFemale ? "female" : "male",
       image: `assets/portraits/${isFemale ? "female" : "male"}-${String(portraitIndex).padStart(3, "0")}.webp`
     };
   });
 })();
+
+const victimPortraits = Array.from({ length: 100 }, (_, index) => {
+  const gender = index % 2 === 0 ? "male" : "female";
+  const portraitIndex = Math.floor(index / 2);
+  return `assets/portraits/${gender}-${String(portraitIndex).padStart(3, "0")}.webp`;
+});
 
 function killerIndexFor(caseIndex) {
   let seed = (caseIndex + 17) * 2654435761;
@@ -202,7 +241,7 @@ function killerIndexFor(caseIndex) {
 }
 
 function buildQuestions({ suspect, isKiller, method, motive, access, deathWindow, caseIndex, suspectIndex }) {
-  const alibiWitness = suspectName((caseIndex * 4 + suspectIndex + 37) % 200);
+  const alibiWitness = suspectName((caseIndex * 4 + suspectIndex + 37) % 400);
   const opener = pick(questionOpeners, caseIndex + suspectIndex);
   const calm = `${suspect.name} ayrıntıları kronolojik anlatıyor; omuzları gevşiyor.`;
   const tense = `${suspect.name} cümlenin ortasında duruyor; parmakları masaya düzensiz vuruyor.`;
@@ -271,12 +310,18 @@ function buildQuestions({ suspect, isKiller, method, motive, access, deathWindow
   ];
 }
 
+function difficultyFor(index) {
+  return index < 25 ? "easy" : index < 50 ? "normal" : index < 75 ? "hard" : "police";
+}
+
 function buildCases() {
   return victims.map((victim, index) => {
     const world = caseWorlds[index % caseWorlds.length];
-    const variant = Math.floor(index / caseWorlds.length);
+    const variant = (Math.floor(index / caseWorlds.length) + Math.floor(index / 50)) % world.methods.length;
     const [short, detail, object, trace] = world.methods[variant];
     const motive = world.motives[variant];
+    const difficulty = difficultyFor(index);
+    const difficultyMeta = difficulties[difficulty];
     const correctIndex = killerIndexFor(index);
     const startHour = 19 + ((index * 7) % 4);
     const startMinute = 8 + ((index * 11) % 39);
@@ -308,36 +353,45 @@ function buildCases() {
 
     return {
       id: `case-${index + 1}`,
-      number: `Dosya No ${String(index + 1).padStart(2, "0")}-${317 + ((index * 19) % 600)}`,
+      number: `Dosya No ${String(index + 1).padStart(3, "0")}-${317 + ((index * 19) % 600)}`,
       title: `${victim} Dosyası`,
       victim,
       location: world.place,
       method,
       motive,
+      difficulty,
+      difficultyLabel: difficultyMeta.label,
+      requiredClues: difficultyMeta.requiredClues,
       deathWindow,
       summary: `${world.place} içinde bulunan ${victim}, ${short} yöntemiyle öldürüldü.`,
       file: [
-        ["Olay yeri", `${world.place}. Ceset kontrollü erişim alanında bulundu; zorla giriş izi yok.`],
+        ["Olay yeri", `${world.place}. Kontrollü erişim alanında zorla giriş izi bulunmadı.`],
         ["Ölüm şekli", detail],
         ["Zaman aralığı", `Adli tıp ölüm saatini ${deathWindow} arası olarak daralttı.`],
         ["Kritik nesne", `${object} üzerinde incelenen ana iz: ${trace}.`],
-        ["Soruşturma ekseni", `Maktulün son günlerde araştırdığı ${motive}, şüphelilerden biri için doğrudan risk oluşturuyordu.`]
+        ["Soruşturma ekseni", `Maktulün araştırdığı ${motive}, doğrudan risk oluşturuyordu.`]
       ],
       timeline: [
         `${deathStart} - Maktul son kez canlı görüldü.`,
         `${deathEnd} - Kontrollü alandaki hareket kaydı kesildi.`,
-        `${object} olay yerinde adli incelemeye alındı.`,
+        `${object} adli incelemeye alındı.`,
         `${motive} dosyasının bir bölümü kayıp bulundu.`
+      ],
+      forensic: [
+        { type: "Maktul", image: victimPortraits[index], title: victim, note: `Dosyaya özel kimlik fotoğrafı · ${String(index + 1).padStart(3, "0")}` },
+        { type: "Olay Yeri", image: `assets/evidence/scenes/case-${String(index + 1).padStart(3, "0")}.webp`, title: world.place, note: `${deathWindow} kayıt aralığı · görüntü ${String(index + 1).padStart(3, "0")}` },
+        { type: "DNA", image: "assets/evidence/dna-report.webp", title: "Biyolojik analiz", note: difficulty === "easy" ? "Eşleşme profili belirgin" : "Karşılaştırmalı inceleme gerekli" },
+        { type: "Balistik / İz", image: "assets/evidence/ballistics-report.webp", title: object, note: trace }
       ],
       suspects,
       killerId: suspects[correctIndex].id
     };
   });
 }
-
 const cases = buildCases();
 const progressByCase = loadProgress();
 const profile = loadProfile();
+let selectedDifficulty = difficulties[profile.difficulty] ? profile.difficulty : "easy";
 let currentCase = null;
 let activeSuspect = null;
 let evidence = new Map();
@@ -366,8 +420,14 @@ const accuseBtn = document.querySelector("#accuseBtn");
 const activePortrait = document.querySelector("#activePortrait");
 const commissionerName = document.querySelector("#commissionerName");
 const resultScreen = document.querySelector("#resultScreen");
+const startShift = document.querySelector("#startShift");
+const profileHint = document.querySelector("#profileHint");
+const archiveSummary = document.querySelector("#archiveSummary");
+const difficultyInputs = [...document.querySelectorAll('input[name="difficulty"]')];
 
 commissionerName.value = profile.name;
+const savedDifficultyInput = difficultyInputs.find((input) => input.value === selectedDifficulty);
+if (savedDifficultyInput) savedDifficultyInput.checked = true;
 
 function cleanName(value = "") {
   return String(value).trim().replace(/\s+/g, " ").slice(0, 28);
@@ -386,9 +446,9 @@ function escapeHtml(value) {
 function loadProfile() {
   try {
     const saved = JSON.parse(localStorage.getItem("gece-vardiyasi-profile") || "{}");
-    return { name: cleanName(saved.name) };
+    return { name: cleanName(saved.name), difficulty: saved.difficulty || "easy" };
   } catch {
-    return { name: "" };
+    return { name: "", difficulty: "easy" };
   }
 }
 
@@ -398,6 +458,7 @@ function commissionerLabel() {
 
 function saveProfile() {
   profile.name = cleanName(commissionerName.value);
+  profile.difficulty = selectedDifficulty;
   commissionerName.value = profile.name;
   try {
     localStorage.setItem("gece-vardiyasi-profile", JSON.stringify(profile));
@@ -436,35 +497,56 @@ function saveCurrentCase() {
   persistProgress();
 }
 
+function casesForSelectedDifficulty() {
+  return cases.filter((item) => item.difficulty === selectedDifficulty);
+}
+
+function updateSetupUI() {
+  const meta = difficulties[selectedDifficulty];
+  const name = cleanName(commissionerName.value);
+  const pool = casesForSelectedDifficulty();
+  const solved = pool.filter((item) => progressByCase.get(item.id)?.isClosed).length;
+  startShift.disabled = !name;
+  document.querySelector("#startShiftHint").textContent = `${meta.label} · sıradaki açık dosya`;
+  profileHint.textContent = name
+    ? `${name}, ${meta.hint.toLocaleLowerCase("tr-TR")} için hazırsın.`
+    : "Devam etmek için dedektif adını yaz.";
+  archiveSummary.textContent = `${meta.label} · ${solved}/25 çözüldü`;
+}
+
 function renderCaseList(filter = caseSearch.value) {
   const normalized = filter.trim().toLocaleLowerCase("tr-TR");
-  const filtered = cases.filter((item) =>
+  const filtered = casesForSelectedDifficulty().filter((item) =>
     `${item.title} ${item.location} ${item.motive} ${item.method.short}`
       .toLocaleLowerCase("tr-TR").includes(normalized)
   );
 
   if (!filtered.length) {
     caseList.innerHTML = '<p class="empty-result">Aramana uyan vaka bulunamadı.</p>';
+    updateSetupUI();
     return;
   }
 
   caseList.innerHTML = filtered.map((item) => {
     const progress = progressByCase.get(item.id);
-    const status = progress?.isClosed ? "Çözüldü" : progress?.questionTotal ? `${progress.questionTotal} soru soruldu` : "Yeni dosya";
+    const status = progress?.isClosed ? "Çözüldü" : progress?.questionTotal ? `${progress.questionTotal} soru` : "Yeni";
     return `
       <button class="case-card ${progress?.isClosed ? "is-solved" : ""}" data-case-id="${item.id}" type="button">
-        <span>${item.number} · ${status}</span>
+        <span><i>${item.difficultyLabel}</i>${item.number} · ${status}</span>
         <strong>${item.title}</strong>
         <small>${item.location} · ${item.method.short}</small>
       </button>`;
   }).join("");
+  updateSetupUI();
 }
-
 function startCase(caseId) {
   cancelPendingAnswer();
   saveCurrentCase();
   currentCase = cases.find((item) => item.id === caseId);
   if (!currentCase) return;
+  selectedDifficulty = currentCase.difficulty;
+  profile.difficulty = selectedDifficulty;
+  saveProfile();
   const saved = progressByCase.get(caseId) || {};
   evidence = new Map(saved.evidence || []);
   asked = new Set(saved.asked || []);
@@ -478,10 +560,13 @@ function startCase(caseId) {
   gameScreen.classList.remove("is-hidden");
   document.querySelector("#caseNumber").textContent = currentCase.number;
   document.querySelector("#caseTitle").textContent = currentCase.title;
+  document.querySelector("#difficultyBadge").textContent = currentCase.difficultyLabel;
   document.querySelector("#caseState").textContent = isClosed ? "Dosya kapandı" : "Dosya açık";
   document.querySelector("#questionCount").textContent = questionTotal;
   document.querySelector("#verdict").className = "verdict";
-  document.querySelector("#verdict").textContent = isClosed ? "Bu vaka çözüldü. Dosya salt okunur durumda." : "Yeterli delil toplamadan acele etme.";
+  document.querySelector("#verdict").textContent = isClosed
+    ? "Bu vaka çözüldü. Dosya salt okunur durumda."
+    : `Karar için ${currentCase.requiredClues} kritik eşleşme gerekli.`;
   accuseBtn.disabled = isClosed;
   accuseSelect.disabled = isClosed;
 
@@ -509,9 +594,17 @@ function resetInterview() {
 
 function renderCaseFile() {
   const timeline = currentCase.timeline.map((item) => `<li>${item}</li>`).join("");
-  document.querySelector("#caseFile").innerHTML =
-    currentCase.file.map(([title, text]) => `<div class="file-card"><strong>${title}</strong><span>${text}</span></div>`).join("") +
-    `<div class="file-card"><strong>Zaman çizelgesi</strong><span><ol>${timeline}</ol></span></div>`;
+  const gallery = currentCase.forensic.map((item) => `
+    <article class="forensic-card">
+      <img src="${item.image}" alt="${item.type}: ${item.title}" />
+      <div><span>${item.type}</span><strong>${item.title}</strong><small>${item.note}</small></div>
+    </article>`).join("");
+  document.querySelector("#caseFile").innerHTML = `
+    <div class="forensic-gallery">${gallery}</div>
+    <div class="file-grid">
+      ${currentCase.file.map(([title, text]) => `<div class="file-card"><strong>${title}</strong><span>${text}</span></div>`).join("")}
+      <div class="file-card timeline-card"><strong>Zaman çizelgesi</strong><span><ol>${timeline}</ol></span></div>
+    </div>`;
 }
 
 function renderSuspects() {
@@ -604,6 +697,7 @@ function askQuestion(index) {
   updateObservation(1, `${suspectName} soruyu değerlendiriyor; cevap vermeden önce kısa bir süre düşünüyor.`, "Cevap bekleniyor");
   renderQuestions();
   renderSuspects();
+  renderLog();
   switchTab("log");
 
   answerTimer = window.setTimeout(() => {
@@ -645,28 +739,20 @@ function cancelPendingAnswer() {
 }
 
 function renderLog() {
-  if (!logEntries.length) {
+  if (!logEntries.length && !isAnswering) {
     log.innerHTML = '<p class="muted">İlk sorgu kaydı burada görünecek.</p>';
     return;
   }
-  log.innerHTML = logEntries.map((entry) => {
-    const tone = Math.max(0, currentCase.suspects.findIndex((suspect) =>
-      suspect.id === entry.suspectId || suspect.name === entry.name
-    ));
-    return `
-      <div class="log-turn">
-        <div class="speech speech-commissioner">
-          <span>${escapeHtml(commissionerLabel())}</span>
-          <p>${entry.question}</p>
-        </div>
-        <div class="speech speech-suspect suspect-tone-${tone}">
-          <span>${entry.name}</span>
-          <p>${entry.answer}</p>
-        </div>
-      </div>`;
+  const completedTurns = [...logEntries].reverse().map((entry) => {
+    const tone = Math.max(0, currentCase.suspects.findIndex((suspect) => suspect.id === entry.suspectId || suspect.name === entry.name));
+    return `<div class="log-turn"><div class="speech speech-commissioner"><span>${escapeHtml(commissionerLabel())}</span><p>${entry.question}</p></div><div class="speech speech-suspect suspect-tone-${tone}"><span>${entry.name}</span><p>${entry.answer}</p></div></div>`;
   }).join("");
+  const pendingItem = isAnswering && activeSuspect ? activeSuspect.questions[pendingQuestionIndex] : null;
+  const pendingTone = activeSuspect ? Math.max(0, currentCase.suspects.findIndex((suspect) => suspect.id === activeSuspect.id)) : 0;
+  const pendingTurn = pendingItem ? `<div class="log-turn is-pending"><div class="speech speech-commissioner"><span>${escapeHtml(commissionerLabel())}</span><p>${pendingItem.q}</p></div><div class="speech speech-suspect suspect-tone-${pendingTone}"><span>${activeSuspect.name}</span><p class="typing-answer"><i></i><i></i><i></i> Yanıt hazırlanıyor</p></div></div>` : "";
+  log.innerHTML = completedTurns + pendingTurn;
+  window.requestAnimationFrame(() => { log.scrollTop = log.scrollHeight; });
 }
-
 function renderEvidence() {
   if (!evidence.size) {
     evidenceList.innerHTML = '<p class="muted">Henüz delil yok. İfadelerden çıkan bilgiler burada birikir.</p>';
@@ -676,7 +762,7 @@ function renderEvidence() {
   }
   const keyCount = [...evidence.values()].filter(Boolean).length;
   document.querySelector("#clueCount").textContent = evidence.size;
-  document.querySelector("#riskLabel").textContent = keyCount >= 3 ? "Dosya güçlü" : keyCount ? "Şüphe belirgin" : "Analiz sürüyor";
+  document.querySelector("#riskLabel").textContent = keyCount >= currentCase.requiredClues ? "Karar için yeterli" : keyCount ? `${keyCount}/${currentCase.requiredClues} kritik eşleşme` : "Analiz sürüyor";
 }
 
 function accuse() {
@@ -687,7 +773,7 @@ function accuse() {
   verdict.className = "verdict";
   if (!suspectId) {
     verdict.textContent = "Önce bir şüpheli seç.";
-  } else if (suspectId === currentCase.killerId && keyCount >= 3) {
+  } else if (suspectId === currentCase.killerId && keyCount >= currentCase.requiredClues) {
     const killer = currentCase.suspects.find((suspect) => suspect.id === currentCase.killerId);
     isClosed = true;
     verdict.classList.add("good");
@@ -700,7 +786,7 @@ function accuse() {
     window.setTimeout(showResultScreen, 420);
   } else if (suspectId === currentCase.killerId) {
     verdict.classList.add("bad");
-    verdict.textContent = "Tahminin doğru olabilir ama dosya zayıf. En az üç kritik delil topla.";
+    verdict.textContent = `Şüphe doğru yönde ancak dosya zayıf. ${currentCase.requiredClues - keyCount} kritik eşleşme daha gerekli.`;
   } else {
     verdict.classList.add("bad");
     verdict.textContent = "Yanlış suçlama. Kritik izler bu şüpheliyle yeterince örtüşmüyor.";
@@ -746,8 +832,27 @@ caseList.addEventListener("click", (event) => {
   if (button) startCase(button.dataset.caseId);
 });
 caseSearch.addEventListener("input", (event) => renderCaseList(event.target.value));
+commissionerName.addEventListener("input", updateSetupUI);
 commissionerName.addEventListener("change", saveProfile);
 commissionerName.addEventListener("blur", saveProfile);
+difficultyInputs.forEach((input) => input.addEventListener("change", () => {
+  selectedDifficulty = input.value;
+  profile.difficulty = selectedDifficulty;
+  caseSearch.value = "";
+  saveProfile();
+  renderCaseList("");
+}));
+startShift.addEventListener("click", () => {
+  saveProfile();
+  if (!profile.name) {
+    commissionerName.focus();
+    updateSetupUI();
+    return;
+  }
+  const pool = casesForSelectedDifficulty();
+  const nextCase = pool.find((item) => !progressByCase.get(item.id)?.isClosed) || pool[0];
+  if (nextCase) startCase(nextCase.id);
+});
 document.querySelector("#backToCases").addEventListener("click", () => {
   cancelPendingAnswer();
   saveCurrentCase();
@@ -773,7 +878,6 @@ document.querySelector("#resetGame").addEventListener("click", () => {
   if (!approved) return;
   cancelPendingAnswer();
   localStorage.removeItem("gece-vardiyasi-progress");
-  localStorage.removeItem("gece-vardiyasi-profile");
   progressByCase.clear();
   currentCase = null;
   activeSuspect = null;
@@ -784,8 +888,6 @@ document.querySelector("#resetGame").addEventListener("click", () => {
   logEntries = [];
   isClosed = false;
   caseSearch.value = "";
-  profile.name = "";
-  commissionerName.value = "";
   renderCaseList("");
 });
 accuseBtn.addEventListener("click", accuse);
@@ -800,4 +902,3 @@ document.querySelector("#resultToCases").addEventListener("click", () => {
 document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => switchTab(tab.dataset.tab)));
 
 renderCaseList();
-

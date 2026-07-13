@@ -3,54 +3,102 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gece Vardiyası | Sorgu Oyunu</title>
-    <link rel="stylesheet" href="styles.css?v=9" />
+    <meta name="theme-color" content="#091113" />
+    <title>Cinayet Büro Amirliği | İnteraktif Soruşturma</title>
+    <link rel="stylesheet" href="styles.css?v=10" />
   </head>
   <body>
     <main class="app-shell">
-      <section id="introScreen" class="intro-screen" aria-label="Vaka seçimi">
-        <div class="intro-copy">
-          <p class="kicker">Cinayet Büro Amirliği</p>
-          <h1>Gece Vardiyası</h1>
-          <p>
-            Soru-cevap bazlı polisiye role play oyunu. Bir vaka seç, şüphelileri
-            sorgula, delilleri karşılaştır ve katili bul.
-          </p>
-          <div class="intro-stats">
-            <span><strong>50</strong> vaka</span>
-            <span><strong>200</strong> şüpheli</span>
-            <span><strong>tek ekran</strong> sorgu masası</span>
+      <section id="introScreen" class="intro-screen" aria-label="Vardiya başlangıcı">
+        <div class="intro-atmosphere" aria-hidden="true"></div>
+        <header class="intro-brand">
+          <span class="brand-mark">CBA</span>
+          <div>
+            <p class="kicker">İstanbul Emniyet Müdürlüğü</p>
+            <span>İnteraktif Soruşturma Simülasyonu</span>
           </div>
-          <label class="commissioner-profile" for="commissionerName">
-            <span>Sorgu tutanağındaki adın</span>
-            <input id="commissionerName" type="text" maxlength="28" autocomplete="name" placeholder="Komiser" />
-            <small>Cevaplar ve tutanak bu ada göre kişiselleştirilir.</small>
-          </label>
+        </header>
+
+        <div class="intro-layout">
+          <section class="intro-copy">
+            <p class="eyebrow">Vardiya · 22.40</p>
+            <h1>Cinayet Büro<br />Amirliği</h1>
+            <p class="intro-lead">
+              İfadeleri çözümle. Adli raporları karşılaştır. Kanıtın götürdüğü yerde suçluyu bul.
+            </p>
+            <div class="intro-stats" aria-label="Oyun içeriği">
+              <span><strong>100</strong> özgün vaka</span>
+              <span><strong>4</strong> zorluk seviyesi</span>
+              <span><strong>400</strong> benzersiz şüpheli</span>
+            </div>
+          </section>
+
+          <section class="briefing-card" aria-labelledby="briefingTitle">
+            <div class="briefing-heading">
+              <div>
+                <p class="kicker">Görev Brifingi</p>
+                <h2 id="briefingTitle">Kimliğini oluştur</h2>
+              </div>
+              <span class="secure-badge">Güvenli Hat</span>
+            </div>
+
+            <label class="detective-field" for="commissionerName">
+              <span>Dedektif adı</span>
+              <input id="commissionerName" type="text" maxlength="28" autocomplete="name" placeholder="Örn. Deniz Aras" />
+            </label>
+
+            <fieldset class="difficulty-fieldset">
+              <legend>Zorluk derecesi</legend>
+              <div class="difficulty-grid">
+                <label class="difficulty-option" data-difficulty="easy">
+                  <input type="radio" name="difficulty" value="easy" checked />
+                  <span class="difficulty-icon">I</span>
+                  <span><strong>Kolay</strong><small>25 vaka · yönlendirmeli</small></span>
+                </label>
+                <label class="difficulty-option" data-difficulty="normal">
+                  <input type="radio" name="difficulty" value="normal" />
+                  <span class="difficulty-icon">II</span>
+                  <span><strong>Normal</strong><small>25 vaka · dengeli</small></span>
+                </label>
+                <label class="difficulty-option" data-difficulty="hard">
+                  <input type="radio" name="difficulty" value="hard" />
+                  <span class="difficulty-icon">III</span>
+                  <span><strong>Zor</strong><small>25 vaka · az ipucu</small></span>
+                </label>
+                <label class="difficulty-option" data-difficulty="police">
+                  <input type="radio" name="difficulty" value="police" />
+                  <span class="difficulty-icon">IV</span>
+                  <span><strong>Gerçek Polis İşi</strong><small>25 vaka · tavizsiz</small></span>
+                </label>
+              </div>
+            </fieldset>
+
+            <button id="startShift" class="start-shift" type="button">
+              <span>Vardiyayı Başlat</span><small id="startShiftHint">Kolay · sıradaki açık dosya</small>
+            </button>
+            <p id="profileHint" class="profile-hint">Devam etmek için dedektif adını yaz.</p>
+          </section>
         </div>
 
-        <section class="case-select-panel">
-          <div class="panel-heading">
-            <div>
-              <p>Vaka Arşivi</p>
-              <span>Başlamak için bir dosya seç</span>
-            </div>
-            <div class="case-tools">
-              <input id="caseSearch" type="search" placeholder="Vaka ara..." />
-              <button id="resetGame" type="button">Oyunu Sıfırla</button>
-            </div>
+        <details class="archive-drawer">
+          <summary><span>Vaka Arşivi</span><small id="archiveSummary">Kolay seviye · 25 dosya</small></summary>
+          <div class="archive-toolbar">
+            <input id="caseSearch" type="search" placeholder="Vaka ara..." />
+            <button id="resetGame" type="button">İlerlemeyi Sıfırla</button>
           </div>
           <div id="caseList" class="case-list"></div>
-        </section>
+        </details>
       </section>
 
-      <section id="gameScreen" class="game-screen is-hidden" aria-label="Sorgu masası">
+      <section id="gameScreen" class="game-screen is-hidden" aria-label="Soruşturma merkezi">
         <header class="game-topbar">
-          <button id="backToCases" type="button">Vakalar</button>
-          <div>
+          <button id="backToCases" class="icon-button" type="button" aria-label="Ana merkeze dön">←</button>
+          <div class="case-heading">
             <p id="caseNumber" class="kicker">Dosya</p>
             <h2 id="caseTitle">Vaka seçilmedi</h2>
           </div>
           <div class="status-strip" aria-label="Vaka durumu">
+            <span id="difficultyBadge">Kolay</span>
             <span><strong id="clueCount">0</strong> delil</span>
             <span><strong id="questionCount">0</strong> soru</span>
             <span id="caseState">Dosya açık</span>
@@ -60,10 +108,7 @@
         <div class="game-board">
           <aside class="panel suspects-panel">
             <div class="panel-heading">
-              <div>
-                <p>Şüpheliler</p>
-                <span id="suspectCount">4 kişi</span>
-              </div>
+              <div><p>Şüpheliler</p><span id="suspectCount">4 kişi</span></div>
             </div>
             <div id="suspectList" class="suspect-list"></div>
           </aside>
@@ -72,29 +117,19 @@
             <div class="interview-header">
               <div class="active-identity">
                 <span id="activePortrait" class="active-portrait is-empty" aria-hidden="true"></span>
-                <div>
-                  <p id="activeRole" class="kicker">Sorgu Odası</p>
-                  <h3 id="activeName">Bir şüpheli seç</h3>
-                </div>
+                <div><p id="activeRole" class="kicker">Sorgu Odası</p><h3 id="activeName">Bir şüpheli seç</h3></div>
               </div>
               <span id="activeMood">Beklemede</span>
             </div>
 
             <div id="observationPanel" class="observation-panel is-empty">
-              <div class="observation-heading">
-                <span>Sorgu Gözlemi</span>
-                <strong id="reactionState">Beklemede</strong>
-              </div>
+              <div class="observation-heading"><span>Sorgu Analizi</span><strong id="reactionState">Beklemede</strong></div>
               <p id="bodyLanguage">Karşı sandalyede henüz kimse yok.</p>
-              <div class="stress-meter" aria-label="Şüphelinin stres seviyesi">
-                <span id="stressBar"></span>
-              </div>
+              <div class="stress-meter" aria-label="Şüphelinin stres seviyesi"><span id="stressBar"></span></div>
             </div>
 
             <div class="question-zone">
-              <p id="activeBio" class="bio">
-                Şüpheli seçildiğinde kısa profil ve sorgu soruları burada görünür.
-              </p>
+              <p id="activeBio" class="bio">Şüpheli seçildiğinde profil ve sorular burada görünür.</p>
               <div id="questionBank" class="question-bank"></div>
             </div>
           </section>
@@ -105,41 +140,20 @@
               <button class="tab" data-tab="evidence" type="button">Deliller</button>
               <button class="tab" data-tab="log" type="button">Tutanak</button>
             </div>
-
-            <section id="fileTab" class="tab-panel is-active">
-              <div id="caseFile" class="case-file"></div>
-            </section>
-
+            <section id="fileTab" class="tab-panel is-active"><div id="caseFile" class="case-file"></div></section>
             <section id="evidenceTab" class="tab-panel">
-              <div class="panel-heading mini">
-                <div>
-                  <p>Delil Defteri</p>
-                  <span id="riskLabel">Analiz yok</span>
-                </div>
-              </div>
+              <div class="panel-heading mini"><div><p>Delil Defteri</p><span id="riskLabel">Analiz yok</span></div></div>
               <div id="evidenceList" class="evidence-list"></div>
             </section>
-
             <section id="logTab" class="tab-panel">
-              <div class="panel-heading mini">
-                <div>
-                  <p>Son Cevap</p>
-                  <span>Sorgu kaydı</span>
-                </div>
-                <button id="clearLog" type="button">Temizle</button>
-              </div>
-              <div id="log" class="log">
-                <p class="muted">İlk sorgu kaydı burada görünecek.</p>
-              </div>
+              <div class="panel-heading mini"><div><p>Son Cevap</p><span>Sorgu kaydı</span></div><button id="clearLog" type="button">Temizle</button></div>
+              <div id="log" class="log"><p class="muted">İlk sorgu kaydı burada görünecek.</p></div>
             </section>
-
             <div class="accuse-box">
-              <label for="accuseSelect">Katili seç</label>
-              <select id="accuseSelect">
-                <option value="">Şüpheli seç...</option>
-              </select>
-              <button id="accuseBtn" type="button">Suçlama Yap</button>
-              <p id="verdict" class="verdict">Yeterli delil toplamadan acele etme.</p>
+              <label for="accuseSelect">Şüpheliyi suçla</label>
+              <select id="accuseSelect"><option value="">Şüpheli seç...</option></select>
+              <button id="accuseBtn" type="button">Dosyayı Sonuçlandır</button>
+              <p id="verdict" class="verdict">Adli veriler tamamlanmadan karar verme.</p>
             </div>
           </aside>
         </div>
@@ -156,13 +170,11 @@
           <div id="resultSummary" class="result-summary"></div>
           <div class="result-actions">
             <button id="reviewCase" type="button">Dosyayı İncele</button>
-            <button id="resultToCases" class="primary" type="button">Vaka Arşivine Dön</button>
+            <button id="resultToCases" class="primary" type="button">Merkeze Dön</button>
           </div>
         </div>
       </section>
     </main>
-
-    <script src="script.js?v=9"></script>
+    <script src="script.js?v=12"></script>
   </body>
 </html>
-
