@@ -274,3 +274,50 @@ select { width: 100%; min-height: 39px; border: 1px solid var(--line); border-ra
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+/* Compact mobile investigation layout */
+@media (max-width: 640px) {
+  body:has(#gameScreen:not(.is-hidden)) { height: 100dvh; overflow: hidden; }
+  .game-screen { height: 100dvh; min-height: 0; grid-template-rows: auto minmax(0,1fr); gap: 5px; padding: 5px; overflow: hidden; }
+  .game-topbar { min-height: 58px; grid-template-columns: 36px minmax(0,1fr) auto; gap: 7px; padding: 5px 7px; }
+  .icon-button { width: 34px; height: 34px; }
+  .case-heading .kicker { font-size: .56rem; }
+  .case-heading h2 { font-size: .92rem; }
+  .status-strip { grid-column: auto; justify-content: end; overflow: hidden; flex-wrap: wrap; gap: 3px; }
+  .status-strip span { padding: 3px 5px; font-size: .58rem; white-space: nowrap; }
+  #caseState { display: none; }
+  .game-board { min-height: 0; grid-template-rows: 82px minmax(225px,.9fr) minmax(225px,1.1fr); gap: 5px; overflow: hidden; }
+  .panel { border-radius: 8px; }
+  .suspects-panel .panel-heading { display: none; }
+  .suspect-list { height: 100%; grid-template-columns: repeat(4,145px); gap: 5px; padding: 6px; overflow-x: auto; overflow-y: hidden; }
+  .suspect { grid-template-columns: 34px 1fr; gap: 6px; padding: 5px; }
+  .suspect-thumb { width: 34px; height: 34px; }
+  .suspect-copy > strong { font-size: .7rem; }
+  .suspect-copy > span { font-size: .6rem; }
+  .suspect-progress { height: 11px; margin-top: 3px; }
+  .suspect-progress small { font-size: .51rem; line-height: 11px; }
+  .interview-panel { min-height: 0; grid-template-rows: 50px 72px minmax(0,1fr); }
+  .interview-header { align-items: start; padding: 5px 8px; }
+  .active-identity { grid-template-columns: 38px minmax(0,1fr); gap: 7px; }
+  .active-portrait { width: 38px; height: 38px; }
+  .interview-header h3 { font-size: 1rem; }
+  .observation-panel { min-height: 0; gap: 5px; margin: 5px; padding: 7px 9px; }
+  .observation-heading { font-size: .55rem; }
+  .observation-panel p { max-height: 32px; overflow: hidden; font-size: .68rem; line-height: 1.35; }
+  .question-zone { min-height: 0; padding: 5px; overflow: hidden; }
+  .bio { display: none; }
+  .question-bank { height: 100%; max-height: none; grid-template-columns: 1fr 1fr; gap: 4px; overflow-y: auto; }
+  .question { min-height: 34px; padding: 5px 6px; font-size: .61rem; line-height: 1.25; }
+  .forensic-card, .forensic-card img { min-height: 88px; height: 88px; }
+  .intel-panel { min-height: 0; }
+  .tabs .tab { padding: 6px 4px; font-size: .65rem; }
+  .case-file, .evidence-list, .log { padding: 6px; }
+  .forensic-gallery { gap: 4px; margin-bottom: 5px; }
+  .forensic-card div { padding: 16px 6px 5px; }
+  .forensic-card small { display: none; }
+  .file-grid { gap: 4px; }
+  .file-card { padding: 6px; }
+  .accuse-box { grid-template-columns: 1fr 1fr; gap: 4px; padding: 5px; }
+  .accuse-box label, .accuse-box .verdict { grid-column: 1 / -1; }
+  .accuse-box select, .accuse-box button { min-height: 32px; padding: 5px; font-size: .65rem; }
+  .verdict { min-height: 0; font-size: .58rem; }
+}

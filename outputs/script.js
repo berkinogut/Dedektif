@@ -446,9 +446,9 @@ function escapeHtml(value) {
 function loadProfile() {
   try {
     const saved = JSON.parse(localStorage.getItem("gece-vardiyasi-profile") || "{}");
-    return { name: cleanName(saved.name), difficulty: saved.difficulty || "easy" };
+    return { name: cleanName(saved.name), difficulty: saved.difficulty || "easy", randomQueues: saved.randomQueues || {} };
   } catch {
-    return { name: "", difficulty: "easy" };
+    return { name: "", difficulty: "easy", randomQueues: {} };
   }
 }
 
@@ -501,13 +501,39 @@ function casesForSelectedDifficulty() {
   return cases.filter((item) => item.difficulty === selectedDifficulty);
 }
 
+function shuffledCaseIds(pool) {
+  const ids = pool.map((item) => item.id);
+  for (let index = ids.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [ids[index], ids[swapIndex]] = [ids[swapIndex], ids[index]];
+  }
+  return ids;
+}
+
+function takeRandomCase() {
+  const pool = casesForSelectedDifficulty();
+  const validIds = new Set(pool.map((item) => item.id));
+  profile.randomQueues ||= {};
+  let queue = Array.isArray(profile.randomQueues[selectedDifficulty])
+    ? profile.randomQueues[selectedDifficulty].filter((id) => validIds.has(id))
+    : [];
+  if (!queue.length) queue = shuffledCaseIds(pool);
+  if (queue.length > 1 && queue.at(-1) === currentCase?.id) {
+    [queue[queue.length - 1], queue[queue.length - 2]] = [queue[queue.length - 2], queue[queue.length - 1]];
+  }
+  const caseId = queue.pop();
+  profile.randomQueues[selectedDifficulty] = queue;
+  saveProfile();
+  return cases.find((item) => item.id === caseId);
+}
+
 function updateSetupUI() {
   const meta = difficulties[selectedDifficulty];
   const name = cleanName(commissionerName.value);
   const pool = casesForSelectedDifficulty();
   const solved = pool.filter((item) => progressByCase.get(item.id)?.isClosed).length;
   startShift.disabled = !name;
-  document.querySelector("#startShiftHint").textContent = `${meta.label} · sıradaki açık dosya`;
+  document.querySelector("#startShiftHint").textContent = `${meta.label} · rastgele dosya`;
   profileHint.textContent = name
     ? `${name}, ${meta.hint.toLocaleLowerCase("tr-TR")} için hazırsın.`
     : "Devam etmek için dedektif adını yaz.";
@@ -849,9 +875,8 @@ startShift.addEventListener("click", () => {
     updateSetupUI();
     return;
   }
-  const pool = casesForSelectedDifficulty();
-  const nextCase = pool.find((item) => !progressByCase.get(item.id)?.isClosed) || pool[0];
-  if (nextCase) startCase(nextCase.id);
+  const randomCase = takeRandomCase();
+  if (randomCase) startCase(randomCase.id);
 });
 document.querySelector("#backToCases").addEventListener("click", () => {
   cancelPendingAnswer();
