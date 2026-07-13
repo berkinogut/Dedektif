@@ -677,6 +677,7 @@ function reportDataFor(index) {
 function openReport(index, trigger) {
   const report = reportDataFor(index);
   lastReportTrigger = trigger;
+  reportModal.dataset.kind = index === 0 ? "victim" : "evidence";
   reportImage.src = report.image;
   reportImage.alt = report.alt;
   document.querySelector("#reportEyebrow").textContent = report.eyebrow;
