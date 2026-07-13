@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gece Vardiyası | Sorgu Oyunu</title>
-    <link rel="stylesheet" href="styles.css?v=8" />
+    <link rel="stylesheet" href="styles.css?v=9" />
   </head>
   <body>
     <main class="app-shell">
@@ -21,6 +21,11 @@
             <span><strong>200</strong> şüpheli</span>
             <span><strong>tek ekran</strong> sorgu masası</span>
           </div>
+          <label class="commissioner-profile" for="commissionerName">
+            <span>Sorgu tutanağındaki adın</span>
+            <input id="commissionerName" type="text" maxlength="28" autocomplete="name" placeholder="Komiser" />
+            <small>Cevaplar ve tutanak bu ada göre kişiselleştirilir.</small>
+          </label>
         </div>
 
         <section class="case-select-panel">
@@ -139,8 +144,25 @@
           </aside>
         </div>
       </section>
+
+      <section id="resultScreen" class="result-screen is-hidden" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+        <div class="result-rays" aria-hidden="true"></div>
+        <div class="result-card">
+          <div class="result-stamp" aria-hidden="true">ÇÖZÜLDÜ</div>
+          <p class="kicker">Cinayet Büro Amirliği</p>
+          <h2 id="resultTitle">Dosya kapandı</h2>
+          <p id="resultLead" class="result-lead"></p>
+          <div id="resultStats" class="result-stats"></div>
+          <div id="resultSummary" class="result-summary"></div>
+          <div class="result-actions">
+            <button id="reviewCase" type="button">Dosyayı İncele</button>
+            <button id="resultToCases" class="primary" type="button">Vaka Arşivine Dön</button>
+          </div>
+        </div>
+      </section>
     </main>
 
-    <script src="script.js?v=8"></script>
+    <script src="script.js?v=9"></script>
   </body>
 </html>
+
